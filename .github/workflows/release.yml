@@ -3,41 +3,33 @@ name: Release HTML
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-html
-  cancel-in-progress: false
+  group: release-html-v2
+  cancel-in-progress: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-
-      - run: npm ci
-      - run: npm test
-      - run: npm run build:html
-
-      - name: Create or update GitHub Release
+      - name: Install
+        run: rm -f package-lock.json && npm install
+      - name: Build CycleStudy.html
+        run: npx vite build && node scripts/build-html.mjs
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          NOTES=$(cat <<'EOF'
-          Self-contained CycleStudy dashboard (actual BTC weeklies + live CoinGecko quote, legend toggles default off).
-
-          **Download** `CycleStudy.html` below and open it in a browser (File → Open / `file://`). Weekly history is embedded — no Vite required. Live quotes still call CoinGecko and show an error if the request is blocked.
-
-          **Vite app:** `npm install && npm run dev` then open http://127.0.0.1:4387
-          EOF
-          )
+          test -f CycleStudy.html
+          NOTES='Self-contained CycleStudy dashboard (actual BTC weeklies + live CoinGecko quote, legend toggles default off). Download CycleStudy.html and open it in a browser (File → Open / file://). Weekly history is embedded — no Vite required. Live quotes still call CoinGecko and show an error if the request is blocked. Vite app: npm install && npm run dev then open http://127.0.0.1:4387'
           if gh release view v1.0.0 >/dev/null 2>&1; then
             gh release upload v1.0.0 CycleStudy.html --clobber
             gh release edit v1.0.0 --title "CycleStudy v1.0.0" --notes "$NOTES"
