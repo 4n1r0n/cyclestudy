@@ -24,8 +24,8 @@ No accounts, database, or API keys. Embedded weekly history works offline. On lo
 
 A self-contained **`CycleStudy.html`** inlines JS, CSS, and the weekly series so you can open it with **File → Open** (`file://`) without running Vite.
 
-1. Download [CycleStudy.html](https://github.com/4n1r0n/cyclestudy/releases/latest/download/CycleStudy.html) from the latest GitHub Release (or use the copy in this repo).
-2. Open the file in a browser. The chart and history work offline.
+1. Download [CycleStudy.html](https://github.com/4n1r0n/cyclestudy/releases/download/v1.0.0/CycleStudy.html) from the [v1.0.0 GitHub Release](https://github.com/4n1r0n/cyclestudy/releases/tag/v1.0.0) (also at [latest](https://github.com/4n1r0n/cyclestudy/releases/latest/download/CycleStudy.html)).
+2. Open the file in a browser (File → Open). The chart and history work offline via `file://`.
 3. Live CoinGecko quotes still try `https://api.coingecko.com`. If the browser blocks that (CORS / network), the page **shows the error** and keeps the embedded weeklies.
 
 Rebuild the HTML after source changes:
